@@ -187,14 +187,7 @@ function ResultPage() {
                     transition={{ duration: 0.6, type: 'spring' }}
                     className="bg-base-100 rounded-3xl p-10 md:p-14 mb-8 shadow-2xl border border-base-300 text-center relative"
                 >
-                    {/* Theme Toggle in top right */}
-                    <div className="absolute top-6 right-6">
-                        <button className="w-10 h-10 bg-base-200 hover:bg-base-300 rounded-full flex items-center justify-center transition-colors">
-                            <svg className="w-5 h-5 text-base-content" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                            </svg>
-                        </button>
-                    </div>
+
 
                     {/* Voter Photo or Icon */}
                     <motion.div

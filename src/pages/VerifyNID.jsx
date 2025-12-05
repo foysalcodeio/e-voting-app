@@ -111,7 +111,7 @@ function VerifyNID() {
                     {/* Form */}
                     <form onSubmit={handleVerify} className="space-y-6">
                         {/* Photo Upload */}
-                        <motion.div
+                        {/* <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.4 }}
@@ -179,7 +179,7 @@ function VerifyNID() {
                                     <p className="text-base-content/50 text-xs mt-2">Max size: 5MB</p>
                                 </div>
                             </div>
-                        </motion.div>
+                        </motion.div> */}
 
                         {/* National ID Number */}
                         <motion.div
