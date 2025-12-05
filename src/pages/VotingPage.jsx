@@ -1,0 +1,300 @@
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useVotes } from '../context/VoteContext';
+import ncpLogo from '../assets/ncp.png';
+import bnpLogo from '../assets/bnp_logo.png';
+import jamayatLogo from '../assets/jamayat.png';
+import jatioLogo from '../assets/jatio-party.png';
+
+const candidates = [
+    {
+        id: 1,
+        name: 'NCP',
+        fullName: 'National Congress Party',
+        logo: ncpLogo,
+        gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        glowColor: 'rgba(16, 185, 129, 0.3)'
+    },
+    {
+        id: 2,
+        name: 'BNP',
+        fullName: 'Bangladesh Nationalist Party',
+        logo: bnpLogo,
+        gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+        glowColor: 'rgba(59, 130, 246, 0.3)'
+    },
+    {
+        id: 3,
+        name: 'Jamayat Sibit',
+        fullName: 'Jamayat-e-Islami Bangladesh',
+        logo: jamayatLogo,
+        gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+        glowColor: 'rgba(139, 92, 246, 0.3)'
+    },
+    {
+        id: 4,
+        name: 'Jatio Party',
+        fullName: 'Jatiya Party Bangladesh',
+        logo: jatioLogo,
+        gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+        glowColor: 'rgba(245, 158, 11, 0.3)'
+    },
+];
+
+function VotingPage() {
+    const [selectedCandidate, setSelectedCandidate] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const nid = location.state?.nid;
+    const { castVote } = useVotes();
+
+    // Redirect if no NID
+    if (!nid) {
+        navigate('/verify');
+        return null;
+    }
+
+    const handleVoteClick = (candidate) => {
+        setSelectedCandidate(candidate);
+        setShowModal(true);
+    };
+
+    const confirmVote = () => {
+        const success = castVote(selectedCandidate.name, nid);
+        if (!success) {
+            alert('This NID has already voted!');
+            navigate('/');
+            return;
+        }
+        setShowModal(false);
+        navigate('/result', { state: { candidate: selectedCandidate, nid } });
+    };
+
+    return (
+        <div className="min-h-screen p-6 relative overflow-hidden" style={{
+            background: 'linear-gradient(135deg, #050205ff 50%, #050205ff 50% )'
+        }}>
+            {/* Animated Background Orbs */}
+            <motion.div
+                animate={{
+                    scale: [1, 1.2, 1],
+                    x: [0, 50, 0],
+                    y: [0, -30, 0],
+                }}
+                transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl"
+            />
+            <motion.div
+                animate={{
+                    scale: [1, 1.3, 1],
+                    x: [0, -60, 0],
+                    y: [0, 40, 0],
+                }}
+                transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl"
+            />
+
+            <div className="max-w-6xl mx-auto relative z-10">
+                {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: -30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center mb-12"
+                >
+                    <motion.h1
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 200 }}
+                        className="text-5xl md:text-6xl font-bold text-white mb-4"
+                        style={{
+                            textShadow: '0 4px 20px rgba(0,0,0,0.3), 0 0 40px rgba(255,255,255,0.2)'
+                        }}
+                    >
+                        Cast Your Vote
+                    </motion.h1>
+                    <p className="text-white/90 text-lg md:text-xl mb-6">Select your preferred candidate</p>
+
+                    {/* Voter ID Badge */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="inline-block bg-white/20 backdrop-blur-xl px-8 py-3 rounded-full border border-white/30 shadow-xl"
+                    >
+                        <div className="flex items-center gap-3">
+                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-white font-semibold">Voter ID: {nid.replace(/(\d{4})/g, '$1 ').trim()}</p>
+                        </div>
+                    </motion.div>
+                </motion.div>
+
+                {/* Candidate Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    {candidates.map((candidate, index) => (
+                        <motion.div
+                            key={candidate.id}
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
+                            whileHover={{ scale: 1.03, y: -8 }}
+                            className="group relative"
+                        >
+                            {/* Glow Effect */}
+                            <div
+                                className="absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                                style={{ background: candidate.gradient }}
+                            />
+
+                            {/* Card */}
+                            <div
+                                className="relative bg-white/95 backdrop-blur-xl rounded-3xl p-8 cursor-pointer shadow-2xl border border-white/50 overflow-hidden"
+                                onClick={() => handleVoteClick(candidate)}
+                            >
+                                {/* Gradient Accent */}
+                                <div
+                                    className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-2xl"
+                                    style={{ background: candidate.gradient }}
+                                />
+
+                                <div className="relative z-10 flex items-center gap-6">
+                                    {/* Logo */}
+                                    <motion.div
+                                        whileHover={{ rotate: 5, scale: 1.1 }}
+                                        className="relative"
+                                    >
+                                        <div
+                                            className="w-24 h-24 rounded-2xl p-1 shadow-xl"
+                                            style={{ background: candidate.gradient }}
+                                        >
+                                            <div className="w-full h-full rounded-xl bg-white flex items-center justify-center overflow-hidden">
+                                                <img src={candidate.logo} alt={candidate.name} className="w-20 h-20 object-contain" />
+                                            </div>
+                                        </div>
+                                    </motion.div>
+
+                                    {/* Info */}
+                                    <div className="flex-1">
+                                        <h3 className="text-2xl font-bold text-base-content mb-1">{candidate.name}</h3>
+                                        <p className="text-base-content/70 text-sm mb-4">{candidate.fullName}</p>
+
+                                        {/* Vote Button */}
+                                        <motion.button
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            className="px-6 py-2.5 rounded-full text-white font-semibold shadow-lg flex items-center gap-2 text-sm"
+                                            style={{ background: candidate.gradient }}
+                                        >
+                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                            </svg>
+                                            Vote Now
+                                        </motion.button>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* Back Button */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                    className="text-center"
+                >
+                    <button
+                        onClick={() => navigate('/verify')}
+                        className="bg-white/20 hover:bg-white/30 backdrop-blur-xl text-white px-8 py-3 rounded-full border border-white/30 font-semibold transition-all duration-300 shadow-xl"
+                    >
+                        ← Back to Verification
+                    </button>
+                </motion.div>
+            </div>
+
+            {/* Confirmation Modal */}
+            {showModal && selectedCandidate && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+                    onClick={() => setShowModal(false)}
+                >
+                    <motion.div
+                        initial={{ scale: 0.9, y: 20 }}
+                        animate={{ scale: 1, y: 0 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                        className="bg-white rounded-3xl p-8 md:p-10 max-w-md w-full shadow-2xl relative overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Gradient Accent */}
+                        <div
+                            className="absolute top-0 right-0 w-64 h-64 opacity-10 rounded-full blur-3xl"
+                            style={{ background: selectedCandidate.gradient }}
+                        />
+
+                        <div className="relative z-10">
+                            {/* Icon */}
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                                className="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center shadow-xl"
+                                style={{ background: selectedCandidate.gradient }}
+                            >
+                                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </motion.div>
+
+                            {/* Content */}
+                            <h2 className="text-3xl font-bold text-base-content text-center mb-3">Confirm Your Vote</h2>
+                            <p className="text-base-content/70 text-center mb-6">Are you sure you want to vote for:</p>
+
+                            {/* Candidate Info */}
+                            <div className="bg-base-200 rounded-2xl p-6 mb-6 text-center">
+                                <div className="w-16 h-16 mx-auto mb-3 rounded-xl overflow-hidden shadow-lg">
+                                    <img src={selectedCandidate.logo} alt={selectedCandidate.name} className="w-full h-full object-contain" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-base-content mb-1">{selectedCandidate.name}</h3>
+                                <p className="text-base-content/70 text-sm">{selectedCandidate.fullName}</p>
+                            </div>
+
+                            {/* Warning */}
+                            <div className="bg-warning/10 border border-warning/30 rounded-xl p-4 mb-6">
+                                <p className="text-warning text-sm text-center font-medium">
+                                    ⚠️ This action cannot be undone. You can only vote once.
+                                </p>
+                            </div>
+
+                            {/* Buttons */}
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 bg-base-200 hover:bg-base-300 text-base-content px-6 py-3 rounded-full font-semibold transition-all duration-300"
+                                >
+                                    Cancel
+                                </button>
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={confirmVote}
+                                    className="flex-1 text-white px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300"
+                                    style={{ background: selectedCandidate.gradient }}
+                                >
+                                    Confirm Vote
+                                </motion.button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </div>
+    );
+}
+
+export default VotingPage;
