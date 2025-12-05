@@ -59,7 +59,7 @@ function VerifyNID() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200 p-4 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-500">
             {/* Background decorative elements */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
@@ -70,7 +70,7 @@ function VerifyNID() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     onClick={() => navigate('/')}
-                    className="flex items-center gap-2 text-base-content/70 hover:text-base-content transition-colors mb-8 group"
+                    className="flex items-center gap-2 text-gray-500 hover:text-base-content transition-colors mb-8 group"
                 >
                     <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
