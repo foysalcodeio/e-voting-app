@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { useVotes } from '../context/VoteContext';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
-import { Doughnut, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Filler } from 'chart.js';
+import { Doughnut, Bar, Line } from 'react-chartjs-2';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Filler);
 
 function ResultPage() {
     const location = useLocation();
@@ -65,6 +65,50 @@ function ResultPage() {
         'BNP': '#3b82f6',
         'Jamayat Sibit': '#8b5cf6',
         'Jatio Party': '#f59e0b',
+    };
+
+    // Calculate Leader
+    const leaderName = candidateNames.reduce((a, b) => votes[a] > votes[b] ? a : b);
+    const leaderVotes = votes[leaderName];
+
+    // Mock Total Voters for Turnout
+    const totalRegisteredVoters = 25000;
+    const turnoutPercentage = ((totalVotes / totalRegisteredVoters) * 100).toFixed(1);
+
+    // Generate Mock Trend Data (cumulative)
+    const timeLabels = ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM'];
+
+    // Helper to generate a random growing array that ends at the total
+    const generateTrend = (total) => {
+        const trend = [0];
+        let current = 0;
+        const increments = [];
+        for (let i = 0; i < 7; i++) {
+            increments.push(Math.random());
+        }
+        const sumIncrements = increments.reduce((a, b) => a + b, 0);
+
+        for (let i = 0; i < 7; i++) {
+            current += (increments[i] / sumIncrements) * total;
+            trend.push(Math.floor(current));
+        }
+        // Force last to match exactly (or close enough for display)
+        trend[trend.length - 1] = total;
+        return trend;
+    };
+
+    const lineData = {
+        labels: timeLabels,
+        datasets: candidateNames.map(name => ({
+            label: name,
+            data: generateTrend(votes[name]),
+            borderColor: chartColors[name],
+            backgroundColor: chartColors[name] + '20', // transparent version
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+        }))
     };
 
     const doughnutData = {
@@ -394,6 +438,102 @@ function ResultPage() {
                                 }}
                             />
                         ))}
+                    </div>
+                </motion.div>
+
+                {/* New Statistics Row */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    {/* Leading Candidate */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 1 }}
+                        className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-2xl" style={{ background: chartColors[leaderName] }}></div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wider mb-2">Leading Candidate</h3>
+                        <div className="flex items-center gap-4">
+                            <div className="text-4xl font-bold text-gray-900 dark:text-white">{leaderName}</div>
+                        </div>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">Ahead with <span className="font-bold text-gray-900 dark:text-white">{leaderVotes.toLocaleString()}</span> votes</p>
+                    </motion.div>
+
+                    {/* Voter Turnout */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 1.1 }}
+                        className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-2xl"></div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wider mb-2">Voter Turnout</h3>
+                        <div className="flex items-end gap-2">
+                            <div className="text-4xl font-bold text-gray-900 dark:text-white">{turnoutPercentage}%</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">of {totalRegisteredVoters.toLocaleString()} registered</div>
+                        </div>
+                        <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full mt-4 overflow-hidden">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${turnoutPercentage}%` }}
+                                transition={{ duration: 1, delay: 1.5 }}
+                                className="h-full bg-blue-500 rounded-full"
+                            />
+                        </div>
+                    </motion.div>
+
+                    {/* Active Stations */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 1.2 }}
+                        className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500 opacity-10 rounded-full blur-2xl"></div>
+                        <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium uppercase tracking-wider mb-2">Polling Stations</h3>
+                        <div className="flex items-center gap-4">
+                            <div className="text-4xl font-bold text-gray-900 dark:text-white">142</div>
+                            <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold rounded-full">100% Active</span>
+                        </div>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">All stations reporting live data</p>
+                    </motion.div>
+                </div>
+
+                {/* Line Chart Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-white dark:bg-gray-800 rounded-3xl p-8 mb-8 shadow-xl border border-gray-100 dark:border-gray-700"
+                >
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                        <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        Live Voting Trend
+                    </h3>
+                    <div className="h-[400px]">
+                        <Line
+                            data={lineData}
+                            options={{
+                                ...chartOptions,
+                                plugins: {
+                                    ...chartOptions.plugins,
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: { color: 'rgba(0,0,0,0.05)' }
+                                    },
+                                    x: {
+                                        grid: { display: false }
+                                    }
+                                }
+                            }}
+                        />
                     </div>
                 </motion.div>
 
