@@ -14,7 +14,7 @@ const candidates = [
         fullName: 'National Congress Party',
         logo: ncpLogo,
         gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        glowColor: 'rgba(16, 185, 129, 0.3)'
+        glowColor: 'rgba(16, 185, 129, 0.2)'
     },
     {
         id: 2,
@@ -73,9 +73,7 @@ function VotingPage() {
     };
 
     return (
-        <div className="min-h-screen p-6 relative overflow-hidden" style={{
-            background: 'linear-gradient(135deg, #050205ff 50%, #050205ff 50% )'
-        }}>
+        <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-500">
             {/* Animated Background Orbs */}
             <motion.div
                 animate={{
@@ -93,7 +91,7 @@ function VotingPage() {
                     y: [0, 40, 0],
                 }}
                 transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                className="absolute bottom-10 left-10 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl"
+                className="absolute bottom-10 left-10 w-[600px] h-[500px] bg-white/10 rounded-full blur-3xl"
             />
 
             <div className="max-w-6xl mx-auto relative z-10">
@@ -107,14 +105,14 @@ function VotingPage() {
                         initial={{ scale: 0.9 }}
                         animate={{ scale: 1 }}
                         transition={{ type: 'spring', stiffness: 200 }}
-                        className="text-5xl md:text-6xl font-bold text-white mb-4"
+                        className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-gray-300 mb-4"
                         style={{
-                            textShadow: '0 4px 20px rgba(0,0,0,0.3), 0 0 40px rgba(255,255,255,0.2)'
+                            textShadow: '0 4px 20px dark:rgba(0,0,0,0.3), 0 0 40px rgba(255,255,255,0.2)'
                         }}
                     >
                         Cast Your Vote
                     </motion.h1>
-                    <p className="text-white/90 text-lg md:text-xl mb-6">Select your preferred candidate</p>
+                    <p className="dark:text-gray-300 text-gray-900 text-lg md:text-xl mb-6">Select your preferred candidate</p>
 
                     {/* Voter ID Badge */}
                     <motion.div
@@ -124,10 +122,10 @@ function VotingPage() {
                         className="inline-block bg-white/20 backdrop-blur-xl px-8 py-3 rounded-full border border-white/30 shadow-xl"
                     >
                         <div className="flex items-center gap-3">
-                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-5 h-5 dark:text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                             </svg>
-                            <p className="text-white font-semibold">Voter ID: {nid.replace(/(\d{4})/g, '$1 ').trim()}</p>
+                            <p className="dark:text-white text-gray-900 font-semibold">Voter ID: {nid.replace(/(\d{4})/g, '$1 ').trim()}</p>
                         </div>
                     </motion.div>
                 </motion.div>
@@ -140,34 +138,34 @@ function VotingPage() {
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
-                            whileHover={{ scale: 1.03, y: -8 }}
+                            whileHover={{ scale: 1.03, y: -10 }}
                             className="group relative"
                         >
                             {/* Glow Effect */}
                             <div
-                                className="absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                                className="absolute -inset-1 rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl"
                                 style={{ background: candidate.gradient }}
                             />
 
                             {/* Card */}
                             <div
-                                className="relative bg-white/95 backdrop-blur-xl rounded-3xl p-8 cursor-pointer shadow-2xl border border-white/50 overflow-hidden"
+                                className="relative bg-white/95 backdrop-blur-xl rounded-xl p-8 cursor-pointer shadow-xl border border-white/80 overflow-hidden"
                                 onClick={() => handleVoteClick(candidate)}
                             >
                                 {/* Gradient Accent */}
                                 <div
-                                    className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-2xl"
+                                    className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-full blur-xl"
                                     style={{ background: candidate.gradient }}
                                 />
 
                                 <div className="relative z-10 flex items-center gap-6">
                                     {/* Logo */}
                                     <motion.div
-                                        whileHover={{ rotate: 5, scale: 1.1 }}
+                                        whileHover={{ rotate: 2, scale: 1.1 }}
                                         className="relative"
                                     >
                                         <div
-                                            className="w-24 h-24 rounded-2xl p-1 shadow-xl"
+                                            className="w-24 h-24 rounded-2xl p-0.5 border border-white/80 shadow-xl"
                                             style={{ background: candidate.gradient }}
                                         >
                                             <div className="w-full h-full rounded-xl bg-white flex items-center justify-center overflow-hidden">
@@ -178,8 +176,8 @@ function VotingPage() {
 
                                     {/* Info */}
                                     <div className="flex-1">
-                                        <h3 className="text-2xl font-bold text-base-content mb-1">{candidate.name}</h3>
-                                        <p className="text-base-content/70 text-sm mb-4">{candidate.fullName}</p>
+                                        <h3 className="text-2xl font-bold text-base-content dark:text-gray-900 mb-1">{candidate.name}</h3>
+                                        <p className="dark:text-base-content dark:text-gray-900 text-sm mb-4">{candidate.fullName}</p>
 
                                         {/* Vote Button */}
                                         <motion.button
@@ -209,7 +207,7 @@ function VotingPage() {
                 >
                     <button
                         onClick={() => navigate('/verify')}
-                        className="bg-white/20 hover:bg-white/30 backdrop-blur-xl text-white px-8 py-3 rounded-full border border-white/30 font-semibold transition-all duration-300 shadow-xl"
+                        className="bg-white/20 hover:bg-white/30 backdrop-blur-xl dark:text-white text-gray-900  px-8 py-3 rounded-full border border-white/30 font-semibold transition-all duration-300 shadow-xl"
                     >
                         ← Back to Verification
                     </button>
