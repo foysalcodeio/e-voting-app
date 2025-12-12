@@ -1,17 +1,55 @@
-# React + Vite
+# E-voting App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A secure and modern electronic voting application built with **React**, **Vite**, and **Tailwind CSS**. This application features a seamless user experience with NID verification, candidate selection, and real-time result visualization.
 
-Currently, two official plugins are available:
+## Technologies Used
+- React.js + Vite
+- Tailwind CSS + DaisyUI
+- Framer Motion (Animations)
+- Three.js / React Three Fiber (3D Backgrounds)
+- Puppeteer (for documentation screenshots)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Application Flow
 
-## React Compiler
+```mermaid
+graph TD
+    A[Home Page] -->|Click Start Voting| B[Verify NID Page]
+    B -->|Enter Valid NID| C{Verification Success?}
+    C -->|Yes| D[Voting Page]
+    C -->|No| B
+    D -->|Select Candidate| E[Confirm Vote Modal]
+    E -->|Confirm| F[Result Page]
+    E -->|Cancel| D
+    F -->|Go Home| A
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Screenshots
 
-## Expanding the ESLint configuration
+### Home Page
+![Home Page](docs/screenshots/home.png)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# e-voting-app
+### Verify NID Page
+![Verify NID Page](docs/screenshots/verify.png)
+
+### Voting Page
+![Voting Page](docs/screenshots/vote.png)
+
+### Result Page
+![Result Page](docs/screenshots/result.png)
+
+## Getting Started
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
+
+3. **Build for Production**
+   ```bash
+   npm run build
+   ```

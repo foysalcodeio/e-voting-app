@@ -6,6 +6,7 @@ import ncpLogo from '../assets/ncp.png';
 import bnpLogo from '../assets/bnp_logo.png';
 import jamayatLogo from '../assets/jamayat.png';
 import jatioLogo from '../assets/jatio-party.png';
+import ThreeBackground from '../components/ThreeBackground';
 
 const candidates = [
     {
@@ -74,7 +75,10 @@ function VotingPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-500">
-            {/* Animated Background Orbs */}
+            {/* Three.js Animated Background */}
+            <ThreeBackground />
+
+            {/* Animated Background Orbs (kept as fallback/layering) */}
             <motion.div
                 animate={{
                     scale: [1, 1.2, 1],
