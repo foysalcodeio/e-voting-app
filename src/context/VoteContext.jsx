@@ -13,8 +13,8 @@ export const useVotes = () => {
 const initialVotes = {
     'NCP': 1247,
     'BNP': 2156,
-    'Jamayat Sibit': 892,
     'Jatio Party': 1534,
+    'Jamayat Islami': 1890,
 };
 
 export const VoteProvider = ({ children }) => {

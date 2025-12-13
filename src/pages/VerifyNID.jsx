@@ -1,18 +1,22 @@
 import { motion } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useVotes } from '../context/VoteContext';
+import { useForm } from 'react-hook-form';
+
+
 
 function VerifyNID() {
-    const [nid, setNid] = useState('');
-    const [dob, setDob] = useState('');
-    const [photo, setPhoto] = useState(null);
     const [photoPreview, setPhotoPreview] = useState(null);
+    const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
+        defaultValues: { nid: '', dob: '' }
+    });
     const [error, setError] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
     const navigate = useNavigate();
-    const fileInputRef = useRef(null);
     const { hasVotedWithNID, setVoterPhoto } = useVotes();
+
+
 
     const handlePhotoChange = (e) => {
         const file = e.target.files[0];
@@ -30,18 +34,12 @@ function VerifyNID() {
         }
     };
 
-    const handleVerify = (e) => {
-        e.preventDefault();
+    const onSubmit = (data) => {
         setError('');
-
-        // Validate NID (10 or 13 or 17 digits)
-        if (!/^\d{10}$|^\d{13}$|^\d{17}$/.test(nid)) {
-            setError('Please enter a valid National ID (10, 13, or 17 digits)');
-            return;
-        }
+        const nidVal = data.nid;
 
         // Check if already voted
-        if (hasVotedWithNID(nid)) {
+        if (hasVotedWithNID(nidVal)) {
             setError('This NID has already been used to vote. Each person can only vote once.');
             return;
         }
@@ -54,7 +52,7 @@ function VerifyNID() {
             if (photoPreview) {
                 setVoterPhoto(photoPreview);
             }
-            navigate('/vote', { state: { nid } });
+            navigate('/vote', { state: { nid: nidVal } });
         }, 1500);
     };
 
@@ -109,77 +107,7 @@ function VerifyNID() {
                     </motion.div>
 
                     {/* Form */}
-                    <form onSubmit={handleVerify} className="space-y-6">
-                        {/* Photo Upload */}
-                        {/* <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.4 }}
-                        >
-                            <label className="flex items-center gap-2 text-base-content font-semibold mb-3">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                                </svg>
-                                Voter Photo
-                            </label>
-
-                            <div className="flex items-center gap-4">
-                                {photoPreview ? (
-                                    <div className="relative">
-                                        <img
-                                            src={photoPreview}
-                                            alt="Voter"
-                                            className="w-32 h-32 object-cover rounded-2xl border-4 border-primary shadow-lg"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setPhoto(null);
-                                                setPhotoPreview(null);
-                                                if (fileInputRef.current) fileInputRef.current.value = '';
-                                            }}
-                                            className="absolute -top-2 -right-2 w-8 h-8 bg-error rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="w-32 h-32 bg-base-200 border-2 border-dashed border-base-300 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-base-300 transition-all"
-                                    >
-                                        <svg className="w-8 h-8 text-base-content/40 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                        <span className="text-xs text-base-content/60">Upload Photo</span>
-                                    </div>
-                                )}
-
-                                <div className="flex-1">
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handlePhotoChange}
-                                        className="hidden"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="btn btn-outline btn-primary rounded-xl"
-                                    >
-                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        {photoPreview ? 'Change Photo' : 'Take/Upload Photo'}
-                                    </button>
-                                    <p className="text-base-content/50 text-xs mt-2">Max size: 5MB</p>
-                                </div>
-                            </div>
-                        </motion.div> */}
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
                         {/* National ID Number */}
                         <motion.div
@@ -193,16 +121,34 @@ function VerifyNID() {
                                 </svg>
                                 National ID Number
                             </label>
-                            <input
-                                type="text"
-                                value={nid}
-                                onChange={(e) => setNid(e.target.value.replace(/\D/g, ''))}
-                                placeholder="Enter your 10, 13, or 17 digit NID"
-                                maxLength="17"
-                                className="w-full px-5 py-4 bg-base-200 border-2 border-base-300 rounded-xl text-base-content text-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                                required
-                            />
-                            <p className="text-base-content/50 text-sm mt-2">{nid.length} / 17 digits</p>
+                            {
+                                (() => {
+                                    const nidReg = register('nid', {
+                                        required: 'NID is required',
+                                        pattern: { value: /^(?:\d{10}|\d{13}|\d{17})$/, message: 'Please enter a valid National ID (10, 13, or 17 digits)' },
+                                        maxLength: { value: 17, message: 'Max 17 digits' }
+                                    });
+
+                                    return (
+                                        <>
+                                            <input
+                                                type="text"
+                                                {...nidReg}
+                                                onChange={(e) => {
+                                                    const v = e.target.value.replace(/\D/g, '').slice(0, 17);
+                                                    e.target.value = v;
+                                                    nidReg.onChange && nidReg.onChange(e);
+                                                }}
+                                                placeholder="Enter your 10, 13, or 17 digit NID"
+                                                maxLength="17"
+                                                className="w-full px-5 py-4 bg-base-200 border-2 border-base-300 rounded-xl text-base-content text-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                                            />
+                                            <p className="text-base-content/50 text-sm mt-2">{(watch('nid') || '').length} / 17 digits</p>
+                                            {errors.nid && <p className="text-error text-sm mt-2">{errors.nid.message}</p>}
+                                        </>
+                                    );
+                                })()
+                            }
                         </motion.div>
 
                         {/* Date of Birth */}
@@ -218,10 +164,9 @@ function VerifyNID() {
                                 Date of Birth
                             </label>
                             <input
-                                type="text"
-                                value={dob}
-                                onChange={(e) => setDob(e.target.value)}
-                                placeholder="mm/dd/yyyy"
+                                type="date"
+                                {...register('dob')}
+                                placeholder="mm-dd-yyyy"
                                 className="w-full px-5 py-4 bg-base-200 border-2 border-base-300 rounded-xl text-base-content text-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </motion.div>
