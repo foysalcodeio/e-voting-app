@@ -135,7 +135,7 @@ function ResultPage() {
 
     const chartOptions = {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'bottom',
@@ -160,7 +160,7 @@ function ResultPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-100 p-4 md:p-8 relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-100 p-4 md:p-8 relative overflow-auto">
             {/* Animated Background Orbs */}
             <motion.div
                 animate={{
@@ -179,13 +179,13 @@ function ResultPage() {
                 className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary rounded-full blur-3xl"
             />
 
-            <div className="max-w-4xl mx-auto relative z-10">
+            <div className="max-w-6xl mx-auto relative z-10">
                 {/* Success Card - Modern Centered Design */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 30 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.6, type: 'spring' }}
-                    className="bg-base-100 rounded-3xl p-10 md:p-14 mb-8 shadow-2xl border border-base-300 text-center relative"
+                    className="bg-base-100 rounded-3xl p-8 md:p-12 mb-8 shadow-2xl border border-base-300 text-center relative"
                 >
 
 
@@ -258,7 +258,7 @@ function ResultPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto mb-8"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full mx-auto mb-8"
                     >
                         <div className="text-left">
                             <p className="text-base-content/60 text-sm mb-1">Voter ID</p>
@@ -504,7 +504,7 @@ function ResultPage() {
                         </svg>
                         Live Voting Trend
                     </h3>
-                    <div className="h-[400px]">
+                    <div className="h-64 md:h-[400px]">
                         <Line
                             data={lineData}
                             options={{
@@ -548,7 +548,7 @@ function ResultPage() {
                             </div>
                             <h3 className="text-xl font-bold text-base-content">Vote Distribution</h3>
                         </div>
-                        <div className="max-w-sm mx-auto">
+                        <div className="max-w-md mx-auto h-64 md:h-80 flex items-center justify-center">
                             <Doughnut data={doughnutData} options={chartOptions} />
                         </div>
                     </motion.div>
@@ -568,20 +568,22 @@ function ResultPage() {
                             </div>
                             <h3 className="text-xl font-bold text-base-content">Vote Comparison</h3>
                         </div>
-                        <Bar data={barData} options={{
-                            ...chartOptions,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: { color: 'rgb(156, 163, 175)', font: { size: 12 } },
-                                    grid: { color: 'rgba(156, 163, 175, 0.1)' }
-                                },
-                                x: {
-                                    ticks: { color: 'rgb(156, 163, 175)', font: { size: 12 } },
-                                    grid: { display: false }
+                        <div className="h-64 md:h-80">
+                            <Bar data={barData} options={{
+                                ...chartOptions,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { color: 'rgb(156, 163, 175)', font: { size: 12 } },
+                                        grid: { color: 'rgba(156, 163, 175, 0.1)' }
+                                    },
+                                    x: {
+                                        ticks: { color: 'rgb(156, 163, 175)', font: { size: 12 } },
+                                        grid: { display: false }
+                                    }
                                 }
-                            }
-                        }} />
+                            }} />
+                        </div>
                     </motion.div>
                 </div>
 
