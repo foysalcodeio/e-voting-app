@@ -56,14 +56,17 @@ function ResultPage() {
         return null;
     }
 
+    const ALLOWED_CANDIDATES = ['NCP', 'BNP', 'Jatio Party', 'Jamayat Islami'];
+
     const totalVotes = getTotalVotes();
-    const candidateNames = Object.keys(votes);
-    const candidateVotes = Object.values(votes);
+    // Filter votes to only include allowed candidates
+    const candidateNames = ALLOWED_CANDIDATES;
+    const candidateVotes = ALLOWED_CANDIDATES.map(name => votes[name] || 0);
 
     const chartColors = {
         'NCP': '#10b981',
         'BNP': '#3b82f6',
-        'Jamayat Sibit': '#8b5cf6',
+        'Jamayat Islami': '#8b5cf6',
         'Jatio Party': '#f59e0b',
     };
 
@@ -162,22 +165,7 @@ function ResultPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-100 p-4 md:p-8 relative overflow-auto">
             {/* Animated Background Orbs */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.1, 0.2, 0.1],
-                }}
-                transition={{ duration: 8, repeat: Infinity }}
-                className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary rounded-full blur-3xl"
-            />
-            <motion.div
-                animate={{
-                    scale: [1, 1.3, 1],
-                    opacity: [0.1, 0.15, 0.1],
-                }}
-                transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-                className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary rounded-full blur-3xl"
-            />
+
 
             <div className="max-w-6xl mx-auto relative z-10">
                 {/* Success Card - Modern Centered Design */}
