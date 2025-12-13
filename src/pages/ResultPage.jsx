@@ -177,40 +177,6 @@ function ResultPage() {
                 >
 
 
-                    {/* Voter Photo or Icon */}
-                    <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                        className="mb-8"
-                    >
-                        {voterPhoto ? (
-                            <div className="relative inline-block">
-                                <img
-                                    src={voterPhoto}
-                                    alt="Voter"
-                                    className="w-28 h-28 object-cover rounded-3xl border-4 border-primary shadow-2xl mx-auto"
-                                />
-                                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
-                                    <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="w-28 h-28 mx-auto bg-gradient-to-br from-primary to-secondary rounded-3xl flex items-center justify-center shadow-2xl relative">
-                                <motion.div
-                                    animate={{ scale: [1, 1.1, 1] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                    className="absolute inset-0 bg-primary rounded-3xl opacity-30 blur-xl"
-                                />
-                                <svg className="w-14 h-14 text-white relative z-10" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                        )}
-                    </motion.div>
-
                     {/* Success Message */}
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
